@@ -1,44 +1,40 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+memo = {}
 
-def main(argv):
-	#i is number, and v is the input(digit)
-  for i, v in enumerate(argv):
-    sv = int(v)
-    conwaySequence(sv)
+def main(argv):    
+    fileName = argv[3]
+    x = int(argv[0])
+    y = int(argv[1])
+    z = int(argv[2])
 
-sequ = {
-		1: 1,
-	}
+    with open(fileName, 'a+') as f:
+        text = f.read()
+        f.write(text)
+        f.write(str(x)+','+str(y)+','+str(z)+'\n')    
+    return newRec(x,y,z,fileName)        
 
-def conwaySequence(inte):
-	global sequ
-	if inte == 1: 
-		print 1
-		return 1
-	for i in xrange(2,inte+1):
-		nextSequence = conWay(sequ[i-1])
-		sequ[i]=nextSequence
-	print nextSequence
-	return nextSequence
-
-def conWay(num):
-	if num == 1: return 11
-	numstr = str(num)
-	outPut = ""
-	repCount = 0
-	for digit in numstr:
-		if repCount == 0:
-			store = digit
-			repCount =1
-		elif digit == store:
-			repCount +=1
-		else:
-			outPut = outPut+str(repCount)+store
-			store = digit
-			repCount = 1
-	outPut = outPut+str(repCount)+store
-	return int(outPut)
-
-
-#maybe can write the sequence in a file for loading next time
+def newRec(x,y,z,fileName):
+    if x<= y:
+        return y
+    else:
+        var1 = 0
+        var2 = 0
+        var3 = 0    
+        if ((x-1, y, z) in memo):
+            var1 = memo[(x-1, y, z)]
+        else:
+            res1 = newRec(x - 1, y, z, fileName)
+            memo[(x-1, y, z)] = res1
+            var1 = res1
+        if ((y-1, z, x) in memo):
+            var2 = memo[(y-1, z, x)]
+        else:
+            res2 = newRec(y-1, z, x, fileName)
+            memo[(y-1, z, x)] = res2
+            var2 = res2
+        if ((z - 1, x, y) in memo):
+            var3 = memo[(z - 1, x, y)]
+        else:
+            res3 = newRec(z - 1, x, y, fileName)
+            memo[(z - 1, x, y)] = res3
+            var3 = res3
+        return main([var1, var2, var3, fileName])
